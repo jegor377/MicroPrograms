@@ -54,6 +54,11 @@ int getNextVirtualKeyCode(int actualVirtualKeyCode) {
 	if(actualVirtualKeyCode == 0x32) return 0x31; // return keyboard 1 button
 }
 
+void pressKey(int virtualKeyCode) {
+	keybd_event(virtualKeyCode, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
+	keybd_event(virtualKeyCode, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+}
+
 int main() {
 	int actualVirtualKeyCode = 0x31; // keyboard 1 button
 	// 0xC0 - tilde key code on keyboard
@@ -63,8 +68,7 @@ int main() {
 	while(1) {
 		keyState.set( isKeyPressedDown(GetAsyncKeyState(0xC0)) );
 		if((keyState.get() == PRESSED_DOWN) && keyState.isChanged()) {
-			keybd_event(actualVirtualKeyCode, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
-			keybd_event(actualVirtualKeyCode, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+			pressKey(actualVirtualKeyCode);
 			actualVirtualKeyCode = getNextVirtualKeyCode(actualVirtualKeyCode);
 			cout<<"PRESSED KEY WITH VIRTUAL CODE: "<<actualVirtualKeyCode<<endl;
 		}
